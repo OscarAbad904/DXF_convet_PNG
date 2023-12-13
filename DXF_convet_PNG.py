@@ -3,13 +3,11 @@ import ezdxf
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle, Arc
 
-def dxf_a_imagen():
+def dxf_a_imagen(DPI=300, Ancho_Linea=1):
     try:
         # Tomar las rutas desde los argumentos de la línea de comandos
         ruta_dxf = sys.argv[1]
         ruta_imagen = sys.argv[2]
-        DPI = sys.argv[3]
-        Ancho_Linea = sys.argv[4]
 
         # Leer el archivo DXF
         doc = ezdxf.readfile(ruta_dxf)
