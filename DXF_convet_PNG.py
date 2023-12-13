@@ -1,11 +1,14 @@
-
+import sys
 import ezdxf
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle, Arc
 
-#Crea una imagen PNG de un archivo DXF
-def dxf_a_imagen(ruta_dxf, ruta_imagen):
+def dxf_a_imagen():
     try:
+        # Tomar las rutas desde los argumentos de la línea de comandos
+        ruta_dxf = sys.argv[1]
+        ruta_imagen = sys.argv[2]
+
         # Leer el archivo DXF
         doc = ezdxf.readfile(ruta_dxf)
 
