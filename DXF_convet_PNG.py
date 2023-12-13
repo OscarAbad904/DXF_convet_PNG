@@ -3,12 +3,14 @@ import ezdxf
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle, Arc
 
-def DXF_convet_PNG(DPI=300, Ancho_Linea=1):
+def DXF_convet_PNG():
     try:
         # Tomar las rutas desde los argumentos de la línea de comandos
         ruta_dxf = sys.argv[1]
         ruta_imagen = sys.argv[2]
-
+        DPI = int(sys.argv[3])
+        Ancho_Linea = float(sys.argv[4])
+        
         # Leer el archivo DXF
         doc = ezdxf.readfile(ruta_dxf)
 
@@ -45,6 +47,7 @@ def DXF_convet_PNG(DPI=300, Ancho_Linea=1):
         # Guardar la figura como imagen
         plt.savefig(ruta_imagen, dpi=DPI)
 
+        print(f"Proceso terminado correctamente")
     except Exception as e:
         print(f"Ha ocurrido un error: {e}")
         return None
