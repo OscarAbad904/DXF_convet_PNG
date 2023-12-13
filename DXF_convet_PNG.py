@@ -8,6 +8,8 @@ def dxf_a_imagen():
         # Tomar las rutas desde los argumentos de la línea de comandos
         ruta_dxf = sys.argv[1]
         ruta_imagen = sys.argv[2]
+        DPI = sys.argv[3]
+        Ancho_Linea = sys.argv[4]
 
         # Leer el archivo DXF
         doc = ezdxf.readfile(ruta_dxf)
@@ -21,15 +23,15 @@ def dxf_a_imagen():
         for entidad in msp:
             if entidad.dxftype() == 'LINE':
                 # Dibujar una línea desde el punto inicial al final
-                plt.plot([entidad.dxf.start[0], entidad.dxf.end[0]], [entidad.dxf.start[1], entidad.dxf.end[1]], color='black', antialiased=True, linewidth=0.8)
+                plt.plot([entidad.dxf.start[0], entidad.dxf.end[0]], [entidad.dxf.start[1], entidad.dxf.end[1]], color='black', antialiased=True, linewidth=Ancho_Linea)
 
             elif entidad.dxftype() == 'CIRCLE':
                 # Dibujar un círculo
-                circulo = Circle((entidad.dxf.center[0], entidad.dxf.center[1]), entidad.dxf.radius, fill=False, antialiased=True, linewidth=0.8)
+                circulo = Circle((entidad.dxf.center[0], entidad.dxf.center[1]), entidad.dxf.radius, fill=False, antialiased=True, linewidth=Ancho_Linea)
                 ax.add_patch(circulo)
             elif entidad.dxftype() == 'ARC':
                 # Dibujar un arco
-                arco = Arc((entidad.dxf.center[0], entidad.dxf.center[1]), 2*entidad.dxf.radius, 2*entidad.dxf.radius, theta1=entidad.dxf.start_angle, theta2=entidad.dxf.end_angle, fill=False, antialiased=True, linewidth=0.8)
+                arco = Arc((entidad.dxf.center[0], entidad.dxf.center[1]), 2*entidad.dxf.radius, 2*entidad.dxf.radius, theta1=entidad.dxf.start_angle, theta2=entidad.dxf.end_angle, fill=False, antialiased=True, linewidth=Ancho_Linea)
                 ax.add_patch(arco)
 
         # Ajustar los límites de la gráfica para que incluyan todas las entidades
@@ -43,7 +45,7 @@ def dxf_a_imagen():
         plt.yticks([])
 
         # Guardar la figura como imagen
-        plt.savefig(ruta_imagen, dpi=100)
+        plt.savefig(ruta_imagen, dpi=DPI)
 
     except Exception as e:
         print(f"Ha ocurrido un error: {e}")
