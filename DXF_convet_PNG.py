@@ -9,7 +9,7 @@ def DXF_convet_PNG():
         ruta_dxf = sys.argv[1]
         ruta_imagen = sys.argv[2]
         DPI = int(sys.argv[3])
-        Ancho_Linea = int(sys.argv[4])
+        Ancho_Linea = float(sys.argv[4])
 
         # Leer el archivo DXF
         doc = ezdxf.readfile(ruta_dxf)
@@ -21,7 +21,10 @@ def DXF_convet_PNG():
         msp = doc.modelspace()
 
         for entidad in msp:
-            if entidad.dxf.linetype=='Continuous':
+            capa = str(entidad.dxf.linetype).lower()
+            print(f"{capa}")
+
+            if capa=='continuous':
                 Color='BLACK'
             else:
                 Color='GREEN'
@@ -52,8 +55,11 @@ def DXF_convet_PNG():
         plt.xticks([])
         plt.yticks([])
 
+        # Ajustar los márgenes
+        plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
+
         # Guardar la figura como imagen
-        plt.savefig(ruta_imagen, dpi=DPI)
+        plt.savefig(ruta_imagen, dpi=DPI, bbox_inches='tight', pad_inches=0)
 
         print(f"Proceso terminado correctamente")
     except Exception as e:
