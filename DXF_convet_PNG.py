@@ -20,12 +20,14 @@ def DXF_convet_PNG():
         # Recorrer todas las entidades en los modelospace
         msp = doc.modelspace()
 
+        ax.set_facecolor((1/255) * 28, (1/255) * 37, (1/255) * 44)
+
         for entidad in msp:
             capa = str(entidad.dxf.linetype).lower()
             print(f"{capa}")
 
             if capa=='continuous':
-                Color='BLACK'
+                Color=(0.0, 0.686, 0.69)
             else:
                 Color='GREEN'
 
