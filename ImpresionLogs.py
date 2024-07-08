@@ -4,6 +4,7 @@ import sys
 import pyautogui
 import time
 import subprocess
+import pyperclip
 from tkinter import Tk, filedialog, messagebox
 
 def leer_archivo(ruta_archivo):
@@ -28,21 +29,30 @@ def mostrar_rutas(rutas):
     else:
         messagebox.showinfo("Rutas Localizadas", "No se encontraron rutas DWG.")
 
+def buscar_ventana_autocad():
+    """Busca una ventana de AutoCAD abierta."""
+    ventanas = pyautogui.getAllWindows()
+    for ventana in ventanas:
+        if "AutoCAD" in ventana.title:
+            return ventana
+    return None
+
 def abrir_autocad(ruta_autocad):
     """Abre AutoCAD LT."""
-    ventana_autocad = pyautogui.getWindowsWithTitle("AutoCAD")
+    ventana_autocad = buscar_ventana_autocad()
     if ventana_autocad:
-        ventana_autocad[0].activate()
+        ventana_autocad.activate()
         time.sleep(2)
     else:
         try:
             subprocess.Popen([ruta_autocad])
             print(f'Abriendo AutoCAD LT')
             time.sleep(10)  # Esperar a que AutoCAD LT se abra completamente
-            messagebox.showinfo("Información", "Si AutoCAD esta abieto, pulse Aceptar para continuar")
+            messagebox.showinfo("Información", "Si AutoCAD está abierto, pulse Aceptar para continuar")
         except Exception as e:
             print(f'Error al abrir AutoCAD LT: {e}')
             sys.exit(1)
+
 
 def abrir_dwg(rutas_dwg):
     """Abre los archivos DWG usando AutoCAD LT."""
@@ -58,16 +68,26 @@ def abrir_dwg(rutas_dwg):
                 continue
             time.sleep(1)
             
+            # Copiar ruta al portapapeles
+            pyperclip.copy(ruta)
+
             # Abrir archivo
             print(f'Abrindo archivo {ruta}')
             pyautogui.hotkey('ctrl', 'o',interval=0.5)  # Abrir archivo
-            time.sleep(1)
-            pyautogui.typewrite(ruta)
+            time.sleep(2)
+            pyautogui.hotkey('ctrl', 'v', interval=0.5)  # Pegar ruta
             pyautogui.press('enter')
-            time.sleep(2)  # Esperar a que el archivo se abra completamente
-            messagebox.showinfo("Información", f'¿Se abrio el archivo {ruta}?, pulse Aceptar para continuar')
+            time.sleep(3)  # Esperar a que el archivo se abra completamente
+            
+            # Mostrar cuadro de mensaje con opción de cancelar
+            respuesta = messagebox.askokcancel("Información", f'¿Se abrió el archivo {ruta}?\n\nPulse Aceptar para continuar\n\nPulse Cancelar para finalizar el proceso')
+            if not respuesta:
+                messagebox.showinfo("Información", "Proceso cancelado por el usuario.")
+                print("Proceso cancelado por el usuario.")
+                sys.exit(1)
         except Exception as e:
             print(f'Error al abrir {ruta}: {e}')
+
 
 if __name__ == "__main__":
     # Crear una ventana de diálogo para seleccionar el archivo de texto
