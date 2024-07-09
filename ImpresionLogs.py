@@ -5,6 +5,7 @@ import pyautogui
 import time
 import subprocess
 import pyperclip
+import tkinter as tk
 from tkinter import Tk, filedialog, messagebox
 
 def leer_archivo(ruta_archivo):
@@ -23,11 +24,27 @@ def leer_archivo(ruta_archivo):
 
 def mostrar_rutas(rutas):
     """Muestra un cuadro de mensaje con las rutas localizadas."""
+    root = tk.Tk()
+    root.withdraw()  # Ocultar la ventana principal
+
+    # Crear una nueva ventana de diálogo
+    dialog = tk.Toplevel(root)
+
+    # Configurar el tamaño de la ventana
+    dialog.geometry("1200x600")  # Ajusta el tamaño según tus necesidades
+
+    # Añadir un widget de texto para mostrar las rutas
+    text_widget = tk.Text(dialog)
+    text_widget.pack(fill="both", expand=True)
+
     if rutas:
         rutas_str = "\n".join(rutas)
-        messagebox.showinfo("Rutas Localizadas", f"Las rutas localizadas son:\n{rutas_str}")
+        text_widget.insert("end", f"Las rutas localizadas son:\n{rutas_str}")
     else:
-        messagebox.showinfo("Rutas Localizadas", "No se encontraron rutas DWG.")
+        text_widget.insert("end", "No se encontraron rutas DWG.")
+        messagebox.showinfo("Información", 'No se encontraron archivos DWG en el archivo de texto.')
+        print('No se encontraron archivos DWG en el archivo de texto.')
+        sys.exit(1)
 
 def buscar_ventana_autocad():
     """Busca una ventana de AutoCAD abierta."""
@@ -73,11 +90,11 @@ def abrir_dwg(rutas_dwg):
 
             # Abrir archivo
             print(f'Abrindo archivo {ruta}')
-            pyautogui.hotkey('ctrl', 'o',interval=0.5)  # Abrir archivo
-            time.sleep(2)
-            pyautogui.hotkey('ctrl', 'v', interval=0.5)  # Pegar ruta
+            pyautogui.hotkey('ctrl', 'o',interval=0.1)  # Abrir archivo
+            time.sleep(1)
+            pyautogui.hotkey('ctrl', 'v', interval=0.1)  # Pegar ruta
             pyautogui.press('enter')
-            time.sleep(3)  # Esperar a que el archivo se abra completamente
+            time.sleep(2)
             
             # Mostrar cuadro de mensaje con opción de cancelar
             respuesta = messagebox.askokcancel("Información", f'¿Se abrió el archivo {ruta}?\n\nPulse Aceptar para continuar\n\nPulse Cancelar para finalizar el proceso')
@@ -97,7 +114,7 @@ if __name__ == "__main__":
         title="Seleccionar archivo de texto",
         filetypes=[("Archivos de texto", "*.txt")]
     )
-
+    
     if not ruta_archivo_texto:
         messagebox.showinfo("Información", 'No se seleccionó ningún archivo.')
         print('No se seleccionó ningún archivo.')
@@ -109,10 +126,8 @@ if __name__ == "__main__":
         sys.exit(1)
 
     rutas_dwg = leer_archivo(ruta_archivo_texto)
-    if not rutas_dwg:
-        messagebox.showinfo("Información", 'No se encontraron archivos DWG en el archivo de texto.')
-        print('No se encontraron archivos DWG en el archivo de texto.')
-        sys.exit(1)
+    
+    mostrar_rutas(rutas_dwg)       
 
     ruta_autocad = "C:\\Program Files\\Autodesk\\AutoCAD LT 2024\\acadlt.exe"
     abrir_autocad(ruta_autocad)
