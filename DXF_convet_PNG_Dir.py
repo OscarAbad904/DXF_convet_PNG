@@ -19,7 +19,6 @@ def DXF_convert_PNG(ruta_dxf, ruta_imagen, DPI, Ancho_Linea):
 
         for entidad in msp:
             capa = str(entidad.dxf.linetype).lower()
-            print(f"{capa}")
 
             if capa == 'continuous':
                 Color = (0.0, 0.0, 0.0)

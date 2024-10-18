@@ -24,7 +24,6 @@ def DXF_convet_PNG():
 
         for entidad in msp:
             capa = str(entidad.dxf.linetype).lower()
-            print(f"{capa}")
 
             if capa=='continuous':
                 Color=(0.0, 0.686, 0.69)
